@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(MaterialApp(
     home: DigitalPetApp(),
+    theme: ThemeData(
+      scaffoldBackgroundColor: Colors.blueGrey[300], // sets background color to a light grey 
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.orange, // text color set to orange
+        ),
+      ),
+    ),
   ));
 }
 
@@ -30,14 +38,13 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
   bool _gameOver = false;
   bool _win = false;
 
-  // Activity selection
-  final List<String> _activities = ['Walk', 'Sleep', 'Dance', 'Play'];
+  // Activity selection drop down menu
+  final List<String> _activities = ['Walk', 'Sleep', 'Dance', 'Cuddle'];
   String _selectedActivity = 'Walk';
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
     _startTimers();
   }
 
@@ -51,15 +58,15 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
 
 
   String getPetImage() {
-    if (happinessLevel > 70) return 'assets/images/pet_happy.png';
-    if (happinessLevel >= 30) return 'assets/images/pet_neutral.png';
-    return 'assets/images/pet_sad.png';
+    if (happinessLevel > 70) return 'assets/images/pet_happy.png'; // sets the happy dino if the happiness level is above 70
+    if (happinessLevel >= 30) return 'assets/images/pet_neutral.png'; // sets the neutral feeling dino when happiness level is between 30 and 70
+    return 'assets/images/pet_sad.png'; // otherwise, shows mad dino
   }
 
   String _getMood() {
-    if (happinessLevel > 70) return 'Happy 😀';
-    if (happinessLevel >= 30) return 'Neutral 😐';
-    return 'Unhappy 😢';
+    if (happinessLevel > 70) return 'Happy 😀'; // shows happy if happiness level is above 70
+    if (happinessLevel >= 30) return 'Neutral 😐'; // shows neutral if happiness level is between 30 and 70
+    return 'Unhappy 😢'; // shows unhappy if levels is below 30
   }
 
   void _clampStats() {
@@ -144,7 +151,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
               _cancelTimers();
               if (mounted)
                 _showEndDialog(
-                    'You Win!', 'Your pet stayed happy for 3 minutes!');
+                    'Congratulations!', 'You kept your pet happy for 3 minutes');
             }
           } else {
             _happyAccumulated = Duration.zero;
@@ -201,7 +208,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
           _energyLevel -= 20;
           hungerLevel += 10;
           break;
-        case 'Nap':
+        case 'Sleep':
           _energyLevel += 25;
           happinessLevel += 5;
           hungerLevel += 5;
@@ -211,18 +218,14 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
           _energyLevel -= 30;
           hungerLevel += 15;
           break;
-        case 'Play':
+        case 'Cuddle':
         default:
           happinessLevel += 10;
-          _energyLevel -= 15;
-          hungerLevel += 10;
       }
       _clampStats();
       _checkGameStatus();
     });
   }
-
-  // ---------- Build UI ----------
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +283,7 @@ class _DigitalPetAppState extends State<DigitalPetApp> {
               SizedBox(height: 16),
 
               // Status bars
-              _buildStatusBar('Happiness', happinessLevel, Colors.green),
+              _buildStatusBar('Happiness', happinessLevel, Colors.yellow),
               _buildStatusBar('Hunger', hungerLevel, Colors.red),
               _buildStatusBar('Energy', _energyLevel, Colors.blue),
 
